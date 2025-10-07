@@ -7,7 +7,7 @@
 
 
 /***** Firmware version *****/
-#define FWVER "AR488 GPIB controller, ver. 0.53.23, 05/08/2025"
+#define FWVER "AR488 GPIB controller, ver. 0.53.25, 07/10/2025"
 
 
 /***** BOARD CONFIGURATION *****/
@@ -67,10 +67,10 @@
   /** ATmega4809 - Nano Every, UNO WiFi Rev2 **/
   #define POE_ETHERNET_GPIB_ADAPTOR
 
-//#elif defined(ESP32)
+#elif defined(ESP32)
   /** ESP32 variants **/
 //  #define NON_ARDUINO   // MUST BE DEFINED!
-  //#define ESP32_DEVKIT1_WROOM_32
+  #define ESP32_DEVKIT1_WROOM_32
   // David Douard / Johann Wilhelm board layouts
   //#define ESP32_TTGO_T8_161
   //#define ESP32_ESP32DEV
@@ -81,6 +81,8 @@
   /** RP2040 Boards **/
   #define RAS_PICO_L1
   //#define RAS_PICO_L2
+  //#define RAS_PICO_L3
+  //#define RAS_PICO_L4
 
 //#elif defined(ARDUINO_NANO_RP2040_CONNECT)
 
@@ -287,7 +289,7 @@
  * MACRO_0 (the startup macro). RUN_STARTUP must be uncommented to 
  * run the startup macro when the interface boots up
  */
-//#define USE_MACROS    // Enable the macro feature
+#define USE_MACROS    // Enable the macro feature
 //#define RUN_STARTUP   // Run MACRO_0 (the startup macro)
 
 #ifdef USE_MACROS

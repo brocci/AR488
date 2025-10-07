@@ -6,7 +6,7 @@
 #include "AR488_Config.h"
 
 
-/***** AR488_Hardware.h, ver. 0.53.18, 05/07/2025 *****/
+/***** AR488_Hardware.h, ver. 0.53.25, 07/10/2025 *****/
 
 
 ///=================================///
@@ -659,6 +659,71 @@ void gpioFuncList();
 
 
 
+/****************************************/
+/***** RAS PICO LAYOUT 3 DEFINITION *****/
+/***** vvvvvvvvvvvvvvvvvvvvvvvvvvvv *****/
+#ifdef RAS_PICO_L3
+
+void gpioFuncList();
+
+#define DIO1_PIN   2   /* GPIB 1  */
+#define DIO2_PIN   3   /* GPIB 2  */
+#define DIO3_PIN   4   /* GPIB 3  */
+#define DIO4_PIN   5   /* GPIB 4  */
+#define DIO5_PIN   6   /* GPIB 13 */
+#define DIO6_PIN   7   /* GPIB 14 */
+#define DIO7_PIN   8   /* GPIB 15 */
+#define DIO8_PIN   9   /* GPIB 16 */
+
+#define IFC_PIN   10   /* GPIB 9  */
+#define NDAC_PIN  11   /* GPIB 8  */
+#define NRFD_PIN  12   /* GPIB 7  */
+#define DAV_PIN   13   /* GPIB 6  */
+#define EOI_PIN   14   /* GPIB 5  */
+
+#define REN_PIN   15   /* GPIB 17 */
+#define SRQ_PIN   20   /* GPIB 10 */
+#define ATN_PIN   21   /* GPIB 11 */
+
+#endif // RAS_PICO_L3
+/***** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ *****/
+/***** RAS PICO LAYOUT 3 DEFINITION *****/
+/****************************************/
+
+
+
+/****************************************/
+/***** RAS PICO LAYOUT 4 DEFINITION *****/
+/***** vvvvvvvvvvvvvvvvvvvvvvvvvvvv *****/
+#ifdef RAS_PICO_L4
+
+void gpioFuncList();
+
+#define DIO1_PIN  10   /* GPIB 1  */
+#define DIO2_PIN  11   /* GPIB 2  */
+#define DIO3_PIN  12   /* GPIB 3  */
+#define DIO4_PIN  13   /* GPIB 4  */
+#define DIO5_PIN  14   /* GPIB 13 */
+#define DIO6_PIN  15   /* GPIB 14 */
+#define DIO7_PIN  20   /* GPIB 15 */
+#define DIO8_PIN  21   /* GPIB 16 */
+
+#define IFC_PIN    2   /* GPIB 9  */
+#define NDAC_PIN   3   /* GPIB 8  */
+#define NRFD_PIN   4   /* GPIB 7  */
+#define DAV_PIN    5   /* GPIB 6  */
+#define EOI_PIN    6   /* GPIB 5  */
+#define REN_PIN    7   /* GPIB 17 */
+#define SRQ_PIN    8   /* GPIB 10 */
+#define ATN_PIN    9   /* GPIB 11 */
+
+#endif // RAS_PICO_L4
+/***** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ *****/
+/***** RAS PICO LAYOUT 4 DEFINITION *****/
+/****************************************/
+
+
+
 /*************************************************/
 /***** NANO RP2040 CONNECT LAYOUT DEFINITION *****/
 /***** vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv *****/
@@ -728,7 +793,7 @@ uint8_t getGpibPinState(uint8_t pin);
   void shiftEnable(bool stat);
 #endif
 
-#if defined(RAS_PICO_L1) || defined(RAS_PICO_L2)
+#if defined(ARDUINO_ARCH_RP2040)
   void initRpGpioPins();
 #endif
 
