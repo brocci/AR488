@@ -196,6 +196,7 @@ bool GPIBbus::isController() {
 
 /***** Detect selected pin state *****/
 bool GPIBbus::isAsserted(uint8_t gpibsig) {
+/*
 #ifdef AR488_MCP23S17 
   uint8_t mcpPinAssertedReg = 0;
   mcpPinAssertedReg = ~getMcpIntAReg();
@@ -206,6 +207,16 @@ bool GPIBbus::isAsserted(uint8_t gpibsig) {
 #endif
   if (getGpibPinState(gpibsig) == LOW) return true;
   return false;
+*/
+
+#if defined(__AVR__) && not defined(AR488_MCP23S17)
+  if (digitalRead(gpibsig) == LOW) return true;
+  return false;
+#else
+  if (getGpibPinState(gpibsig) == LOW) return true;
+  return false;
+#endif
+
 }
 
 
