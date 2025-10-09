@@ -3,7 +3,7 @@
 #include "AR488_Config.h"
 #include "AR488_Layouts.h"
 
-/***** AR488_Hardware.cpp, ver. 0.53.25, 07/10/2025 *****/
+/***** AR488_Hardware.cpp, ver. 0.53.26, 08/10/2025 *****/
 
 ///=================================================///
 ///       Hardware layout function definitions      ///
@@ -2164,55 +2164,151 @@ uint8_t getGpibPinState(uint8_t pin){
 
 
 /********************************************/
-/***** NANO RP2040 CONNECT BOARD LAYOUT *****/
+/***** UNO/NANO R4 RENESAS BOARD LAYOUT *****/
 /***** vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv *****/
-#ifdef RPI_NANO_RP2040
+#ifdef RA4M1_NANO_R4
 
-const uint32_t gpioDbMask = 0x23F8000;
-const uint32_t gpioCtrlMask = 0x300030D0;
+/* NOTE: Renesas RA4M1 boards work only with SN7516x buffer chips */
 
-uint32_t reverseBits(uint32_t dbyte) {
-   dbyte = (dbyte & 0xF0) >> 4 | (dbyte & 0x0F) << 4;
-   dbyte = (dbyte & 0xCC) >> 2 | (dbyte & 0x33) << 2;
-   dbyte = (dbyte & 0xAA) >> 1 | (dbyte & 0x55) << 1;
-   return dbyte;
+/***** Control pin map *****/
+/*
+  Data pin map
+  ------------
+  DIO1_PIN  A0 : GPIB 1  : PC0
+  DIO2_PIN  A1 : GPIB 2  : PC1
+  DIO3_PIN  A2 : GPIB 3  : PC2
+  DIO4_PIN  A3 : GPIB 4  : PC3
+  DIO5_PIN  A4 : GPIB 13 : PC4
+  DIO6_PIN  A5 : GPIB 14 : PC5
+  DIO7_PIN   4 : GPIB 15 : PD4
+  DIO8_PIN   5 : GPIB 16 : PD5
+
+  Control pin map
+  ---------------
+  IFC_PIN   8  : GPIB  9 : PB0 : b0
+  NDAC_PIN  9  : GPIB  8 : PB1 : b1
+  NRFD_PIN  10 : GPIB  7 : PB2 : b2
+  DAV_PIN   11 : GPIB  6 : PB3 : b3
+  EOI_PIN   12 : GPIB  5 : PB4 : b4
+  REN_PIN   3  : GPIB 17 : PD2 : b5
+  SRQ_PIN   2  : GPIB 10 : PD2 : b6
+  ATN_PIN   7  : GPIB 11 : PD7 : b7
+
+  Bits control lines as follows: 7-ATN_PIN, 6-SRQ_PIN, 5-REN_PIN, 4-EOI_PIN, 3-DAV_PIN, 2-NRFD_PIN, 1-NDAC_PIN, 0-IFC_PIN
+    bits : 0=LOW, 1=HIGH
+    mask : 0=unaffected, 1=affected
+
+  digitalReadFast and digitalWriteFast functions based on UNOR4_digitalWritefast.h
+  by KurtE:
+  https://github.com/KurtE/UNOR4-stuff/blob/main/libraries/UNOR4_digitalWriteFast/UNOR4_digitalWriteFast.h#L50-L59
+
+*/
+
+static R_PORT0_Type *port_table[] = { R_PORT0, R_PORT1, R_PORT2, R_PORT3, R_PORT4, R_PORT5, R_PORT6, R_PORT7 };
+static const uint16_t mask_table[] = { 1 << 0, 1 << 1, 1 << 2, 1 << 3, 1 << 4, 1 << 5, 1 << 6, 1 << 7,
+                                       1 << 8, 1 << 9, 1 << 10, 1 << 11, 1 << 12, 1 << 13, 1 << 14, 1 << 15 };
+
+uint8_t databus[8] = { DIO1_PIN, DIO2_PIN, DIO3_PIN, DIO4_PIN, DIO5_PIN, DIO6_PIN, DIO7_PIN, DIO8_PIN };
+uint8_t ctrlbus[8] = { IFC_PIN, NDAC_PIN, NRFD_PIN, DAV_PIN, EOI_PIN, REN_PIN, SRQ_PIN, ATN_PIN };
+
+
+/***** Fast write digital pin *****/
+static inline void digitalWriteFast(uint8_t pin, uint8_t val) {
+  uint16_t port_pin = g_pin_cfg[pin].pin;
+  uint16_t pin_mask = mask_table[port_pin & 0x0F];
+  port_pin = port_pin >> 8;
+  if (val) {
+    port_table[port_pin]->POSR = pin_mask;
+  } else {
+    port_table[port_pin]->PORR = pin_mask;
+  }
 }
 
 
+/***** Fast read digital pin *****/
+static inline uint16_t digitalReadFast(pin_size_t pin) {
+  uint16_t port_pin = g_pin_cfg[pin].pin;
+  uint16_t pin_mask = mask_table[port_pin & 0x0F];
+  port_pin = port_pin >> 8;
+    if (port_table[port_pin]->PIDR & pin_mask) {
+    return HIGH;
+  }else{
+    return LOW;
+  }
+}
+
+
+/***** Fast toggle digital pin *****/
+static inline void digitalToggleFast(pin_size_t pin) {
+  uint16_t port_pin = g_pin_cfg[pin].pin;
+  uint16_t pin_mask = mask_table[port_pin & 0x0F];
+  port_pin = port_pin >> 8;
+
+  if (port_table[port_pin]->PODR & pin_mask) {
+    port_table[port_pin]->PORR = pin_mask;
+  }else{
+    port_table[port_pin]->POSR = pin_mask;
+  }
+}
+
+
+/***** Set the GPIB data bus to input pullup *****/
 void readyGpibDbus() {
-  // Set data pins to input  
-  gpio_init_mask(0x023F8000);
-  gpio_set_dir_in_masked(0x023F8000);
-  gpio_set_pullups_masked(0x023F8000);
+  for (uint8_t i=0; i<8; i++){
+    pinMode(databus[i], INPUT_PULLUP);
+  }
 }
 
 
 /***** Read the GPIB data bus wires to collect the byte of data *****/
 uint8_t readGpibDbus() {
-  // Read the byte of data on the bus
-  uint32_t gpioall = gpio_get_all();
-  uint32_t result1 = reverseBits(gpioall << 6);
-  uint32_t result2 = gpioall >> 25;
-  gpioall = result1 + result2;  
-  return (uint8_t)~gpioall;
+  uint8_t db = 0;
+  for (uint8_t i=0; i<8; i++){
+    if (!digitalReadFast(databus[i])) db += (1<<i);
+
+  }
+  return db;
 }
 
 
 /***** Set the GPIB data bus to output and with the requested byte *****/
 void setGpibDbus(uint8_t db) {
-  uint32_t gpioall = db << 6;
-  gpio_set_dir_out_masked(0x023F8000);
-  gpio_put_masked(0x023F8000, gpioall);
+
+  for (uint8_t i=0; i<8; i++){
+    pinMode(databus[i], OUTPUT);
+    digitalWriteFast(databus[i], ((db&(1<<i)) ? LOW : HIGH) );
+  }
+  
+}
+
+
+void setGpibCtrlState(uint8_t bits, uint8_t mask) {
+
+  // Set pin state
+  for (uint8_t i=0; i<8; i++) {
+    if (mask&(1<<i)) digitalWriteFast( ctrlbus[i], ((bits&(1<<i)) ? HIGH : LOW) );
+  }
+
+}
+
+
+void setGpibCtrlDir(uint8_t bits, uint8_t mask) {
+  // Set pin direction
+  for (uint8_t i=0; i<8; i++) {
+    if (mask&(1<<i)) pinMode( ctrlbus[i], ((bits&(1<<i)) ? OUTPUT : INPUT_PULLUP) );
+  }
 }
 
 
 uint8_t getGpibPinState(uint8_t pin){
-  return digitalRead(pin);
+//  return digitalRead(pin);
+  return digitalReadFast(pin);
 }
 
-#endif // RPI_NANO_RP2040
+
+#endif // RA4M1_NANO_R4
 /***** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ *****/
-/***** NANO RP2040 CONNECT BOARD LAYOUT *****/
+/***** UNO/NANO R4 RENESAS BOARD LAYOUT *****/
 /********************************************/
 
 
@@ -2225,7 +2321,6 @@ uint8_t getGpibPinState(uint8_t pin){
 
 
 uint8_t databus[8] = { DIO1_PIN, DIO2_PIN, DIO3_PIN, DIO4_PIN, DIO5_PIN, DIO6_PIN, DIO7_PIN, DIO8_PIN };
-
 uint8_t ctrlbus[8] = { IFC_PIN, NDAC_PIN, NRFD_PIN, DAV_PIN, EOI_PIN, REN_PIN, SRQ_PIN, ATN_PIN };
 
 

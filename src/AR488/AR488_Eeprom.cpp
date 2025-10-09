@@ -2,7 +2,7 @@
 #include <EEPROM.h>
 #include "AR488_Eeprom.h"
 
-/***** AR488_Eeprom.cpp, ver. 0.01.05, 26/056/2025 *****/
+/***** AR488_Eeprom.cpp, ver. 0.01.06, 08/10/2025 *****/
 /*
  * EEPROM functions implementation
  */
@@ -17,7 +17,7 @@ unsigned long int getCRC32(uint8_t bytes[], uint16_t bsize);
 /********************************/
 /***** AVR EEPROM functions *****/
 /********************************/
-#if defined(__AVR__)
+#if defined(__AVR__) || defined (ARDUINO_ARCH_RENESAS)
 
 /***** Show all bytes of EEPROM data *****/
 

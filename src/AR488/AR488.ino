@@ -14,7 +14,7 @@
 #include "AR488_Eeprom.h"
 
 
-/***** FWVER "AR488 GPIB controller, ver. 0.53.25, 07/10/2025" *****/
+/***** FWVER "AR488 GPIB controller, ver. 0.53.26, 08/10/2025" *****/
 
 /*
   Arduino IEEE-488 implementation by John Chajecki
@@ -1731,7 +1731,7 @@ void rst_h() {
   rp2040.reboot();
 #elif defined(__IMXRT1062__) 
   SCB_AIRCR = 0x05FA0004;
-#elif defined(ARDUINO_UNOR4_MINIMA) || defined (ARDUINO_UNOR4_WIFI)
+#elif defined(ARDUINO_ARCH_RENESAS)
   NVIC_SystemReset();
 #else
   // Otherwise restart program (soft reset)
@@ -2082,7 +2082,7 @@ void dcl_h() {
 
 /***** Re-load default configuration *****/
 void default_h(char *params) {
-  #if defined(__AVR__) || defined (ESP32)
+  #if defined(__AVR__) || defined (ESP32) || defined (ARDUINO_ARCH_RENESAS)
   if (params != NULL) {
     if (strncasecmp(params, "wipe", 4) == 0) {
       epErase();
