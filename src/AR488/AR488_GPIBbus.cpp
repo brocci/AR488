@@ -40,9 +40,6 @@ void GPIBbus::begin() {
   initRpGpioPins();
 #endif
 //gpioFuncList();
-#ifdef LEVEL_SHIFTER
-  initLevelShifter();
-#endif
   if (isController()) {
     startControllerMode();
 //    gpioFuncList();
