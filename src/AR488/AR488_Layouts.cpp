@@ -978,11 +978,6 @@ void mcpIntHandler() {
 }
 
 
-uint8_t getMcpIntAReg(){
-  return mcpIntAReg;
-}
-
-
 /***** Read from the MCP23S17 *****/
 /*
  * reg : register we want to read , e.g. MCPPORTA or MCPPORTB
@@ -1036,7 +1031,8 @@ uint8_t mcpDigitalRead(uint8_t pin) {
 
 /***** Get the status of an MCP23S17 pin) *****/
 uint8_t getGpibPinState(uint8_t pin){
-  return mcpDigitalRead(pin);
+  if (mcpIntAReg & (1 << gpibsig)) return LOW;    // 1 means interrupt triggered, so asserted (LOW)
+  return HIGH;
 }
 
 
