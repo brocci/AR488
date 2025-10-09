@@ -3,7 +3,7 @@
 #include "AR488_Config.h"
 #include "AR488_GPIBbus.h"
 
-/***** AR488_GPIB.cpp, ver. 0.53.23, 05/08/2025 *****/
+/***** AR488_GPIB.cpp, ver. 0.53.26, 08/10/2025 *****/
 
 
 /****** Process status values *****/
@@ -36,7 +36,7 @@ GPIBbus::GPIBbus() {
 
 /***** Start the bus in controller or device mode depending on config *****/
 void GPIBbus::begin() {
-#if defined(RAS_PICO_L1) || defined(RAS_PICO_L2) 
+#if defined(ARDUINO_ARCH_RP2040)
   initRpGpioPins();
 #endif
 //gpioFuncList();

@@ -7,7 +7,7 @@
 
 
 /***** Firmware version *****/
-#define FWVER "AR488 GPIB controller, ver. 0.53.23, 05/08/2025"
+#define FWVER "AR488 GPIB controller, ver. 0.53.26, 08/10/2025"
 
 
 /***** BOARD CONFIGURATION *****/
@@ -67,10 +67,10 @@
   /** ATmega4809 - Nano Every, UNO WiFi Rev2 **/
   #define POE_ETHERNET_GPIB_ADAPTOR
 
-//#elif defined(ESP32)
+#elif defined(ESP32)
   /** ESP32 variants **/
 //  #define NON_ARDUINO   // MUST BE DEFINED!
-  //#define ESP32_DEVKIT1_WROOM_32
+  #define ESP32_DEVKIT1_WROOM_32
   // David Douard / Johann Wilhelm board layouts
   //#define ESP32_TTGO_T8_161
   //#define ESP32_ESP32DEV
@@ -81,12 +81,19 @@
   /** RP2040 Boards **/
   #define RAS_PICO_L1
   //#define RAS_PICO_L2
+  //#define RAS_PICO_L3
+  //#define RAS_PICO_L4
 
 //#elif defined(ARDUINO_NANO_RP2040_CONNECT)
 
 //#elif defined(ARDUINO_ARCH_MBED_NANO)
 
 //#elif defined(ARDUINO_ARCH_MBED_RP2040)
+
+#elif defined(ARDUINO_ARCH_RENESAS)
+  /** UNO/NANO (Renesas) R4 boards **/
+  /* NOTE: Renesas RA4M1 boards work only with SN7516x buffer chips */
+  #define RA4M1_NANO_R4
 
 #endif  // Board/layout selection
 
@@ -164,14 +171,14 @@
  * This will require the use of an additional GPIO pin to control
  * the read and write modes of the ICs.
  */
-//#define SN7516X
+#define SN7516X
 #ifdef SN7516X
-//  #define SN7516X_TE 6
+  #define SN7516X_TE 6
 //  #define SN7516X_DC 13
 //  #define SN7516X_SC 12
   // ONLYA board
-  #define SN7516X_TE 13
-  #define SN7516X_DC 5
+//  #define SN7516X_TE 13
+//  #define SN7516X_DC 5
 #endif
 
 
@@ -287,7 +294,7 @@
  * MACRO_0 (the startup macro). RUN_STARTUP must be uncommented to 
  * run the startup macro when the interface boots up
  */
-//#define USE_MACROS    // Enable the macro feature
+#define USE_MACROS    // Enable the macro feature
 //#define RUN_STARTUP   // Run MACRO_0 (the startup macro)
 
 #ifdef USE_MACROS
