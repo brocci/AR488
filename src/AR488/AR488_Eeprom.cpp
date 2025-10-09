@@ -2,12 +2,9 @@
 #include <EEPROM.h>
 #include "AR488_Eeprom.h"
 
-<<<<<<< HEAD
 
-/***** AR488_Eeprom.cpp, ver. 0.01.05, 26/056/2025 *****/
-=======
 /***** AR488_Eeprom.cpp, ver. 0.01.06, 08/10/2025 *****/
->>>>>>> Fixes2025
+
 /*
  * EEPROM functions implementation
  */
