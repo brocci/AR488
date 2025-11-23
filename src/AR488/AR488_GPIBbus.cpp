@@ -3,7 +3,7 @@
 #include "AR488_Config.h"
 #include "AR488_GPIBbus.h"
 
-/***** AR488_GPIB.cpp, ver. 0.53.26, 08/10/2025 *****/
+/***** AR488_GPIB.cpp, ver. 0.53.30, 23/11/2025 *****/
 
 
 /****** Process status values *****/
@@ -39,6 +39,9 @@ void GPIBbus::begin() {
 #if defined(ARDUINO_ARCH_RP2040)
   initRpGpioPins();
 #endif
+#if defined(ESP32)
+  initEspGpioPins();
+#endif
 //gpioFuncList();
   if (isController()) {
     startControllerMode();
@@ -58,7 +61,7 @@ void GPIBbus::stop() {
 //  gpioFuncList();
   // Set data bus to default state (all lines input_pullup)
 //Serial.println(F("Ready the data bus:"));
-  readyGpibDbus();
+  readyGpibDbus(INPUT_PULLUP);
 //  gpioFuncList();
 #ifdef LEVEL_SHIFTER
   // Disable level shifter
@@ -104,7 +107,7 @@ void GPIBbus::startControllerMode() {
   // Set GPIB control bus to controller idle mode
   setControls(CINI);
   // Initialise GPIB data lines (sets to INPUT_PULLUP)
-  readyGpibDbus();
+//  readyGpibDbus();
 #ifdef LEVEL_SHIFTER
   // Enable level shifter
   shiftEnable(true);
@@ -149,6 +152,7 @@ void GPIBbus::setTransmitMode(enum transmitMode mode) {
       break;
     case TM_RECV:
       outputs = (NRFD_BIT | NDAC_BIT);        // Signal NRFD and NDAC, listen to DAV and EOI
+      readyGpibDbus(INPUT_PULLUP);            // Set data bus to input_pullup
       setGpibCtrlDir(outputs, HSHK_BITS);     // Set handshake inputs and outputs (0=input_PULLUP, 1=output)
       setGpibCtrlState(~outputs, outputs);    // Set handshake output signals to asserted/LOW
       #ifdef SN7516X
@@ -157,6 +161,7 @@ void GPIBbus::setTransmitMode(enum transmitMode mode) {
       break;
     case TM_SEND:
       outputs = (DAV_BIT | EOI_BIT);          // Signal DAV and EOI, listen to NRFD and NDAC
+      readyGpibDbus(OUTPUT);                  // Set the data bus for output
       setGpibCtrlDir(outputs, HSHK_BITS);     // Set handshake inputs and outputs (0=input_pullup, 1=output)
       setGpibCtrlState(outputs, outputs);     // Set handshake output signals to unasserted/HIGH
       #ifdef SN7516X
@@ -596,7 +601,7 @@ enum receiveState GPIBbus::receiveData(Stream &dataStream, bool detectEoi, bool 
   }
 
   // Ready the data bus
-  readyGpibDbus();
+//  readyGpibDbus();
 
   // Perform read of data (r=0: data read OK; r>0: GPIB read error);
   while (hstate == HANDSHAKE_COMPLETE) {
@@ -958,7 +963,7 @@ void GPIBbus::setControls(uint8_t state) {
       clearAllSignals();
       setOperatingMode(OP_DEVI);  // Set up for device mode
       // Set data bus to idle state
-      readyGpibDbus();
+//      readyGpibDbus();
 #ifdef DEBUG_GPIBbus_CONTROL
       DB_PRINT(F("Initialised GPIB listener mode"), "");
 #endif
@@ -971,7 +976,7 @@ void GPIBbus::setControls(uint8_t state) {
 #endif
       setTransmitMode(TM_IDLE);
       // Set data bus to idle state
-      readyGpibDbus();
+//      readyGpibDbus();
 #ifdef DEBUG_GPIBbus_CONTROL
       DB_PRINT(F("Set GPIB lines to idle state"), "");
 #endif
@@ -1112,9 +1117,9 @@ bool GPIBbus::isDeviceInIdleState() {
 
 
 /***** Clear the data bus and set to listen state *****/
-void GPIBbus::clearDataBus() {
-  readyGpibDbus();
-}
+//void GPIBbus::clearDataBus() {
+//  readyGpibDbus();
+//}
 
 
 /***** Read a SINGLE BYTE of data from the GPIB bus using 3-way handshake *****/

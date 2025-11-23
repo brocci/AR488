@@ -7,7 +7,7 @@
 
 
 /***** Firmware version *****/
-#define FWVER "AR488 GPIB controller, ver. 0.53.26, 08/10/2025"
+#define FWVER "AR488 GPIB controller, ver. 0.53.30, 23/11/2025"
 
 
 /***** BOARD CONFIGURATION *****/
@@ -69,10 +69,9 @@
 
 #elif defined(ESP32)
   /** ESP32 variants **/
-//  #define NON_ARDUINO   // MUST BE DEFINED!
-  #define ESP32_DEVKIT1_WROOM_32
+  //#define ESP32_DEVKIT1_WROOM
   // David Douard / Johann Wilhelm board layouts
-  //#define ESP32_TTGO_T8_161
+  #define ESP32_TTGO_T8_161
   //#define ESP32_ESP32DEV
   //#define ESP32_LOLIN32_161   // ESP32_LOLIN32_161_V2 profile has the same pin assigments
   //#define ESP32_S2_161
@@ -173,12 +172,19 @@
  */
 //#define SN7516X
 #ifdef SN7516X
-  #define SN7516X_TE 6
-  #define SN7516X_DC 13
+/*** Jay Diddy B board ***/
+//  #define SN7516X_TE 6
+//  #define SN7516X_DC 13
 //  #define SN7516X_SC 12
-  // ONLYA board
+/*** ONLYA board ***/
 //  #define SN7516X_TE 13
 //  #define SN7516X_DC 5
+/*** WilheJo board (V4) ***/
+//  #define SN7516X_TE 17
+//  #define SN7516X_DC 45
+/*** Devkit v1 ***/
+  #define SN7516X_TE 2
+  // DC connected to REN
 #endif
 
 

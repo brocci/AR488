@@ -8,7 +8,7 @@
 
 
 
-/***** AR488_GPIBbus.cpp, ver. 0.53.28, 08/10/2025 *****/
+/***** AR488_GPIBbus.cpp, ver. 0.53.30, 23/11/2025 *****/
 
 
 /*********************************************/
@@ -207,7 +207,7 @@ public:
   enum gpibHandshakeState writeByte(uint8_t db, bool isLastByte);
   enum receiveState receiveData(Stream &dataStream, bool detectEoi, bool detectEndByte, uint8_t endByte, size_t maxSize = 0);
   void sendData(const char *data, uint8_t dsize, bool isLastPacket = true);
-  void clearDataBus();
+//  void clearDataBus();
   void setControlVal(uint8_t value);
   void setDataVal(uint8_t value);
 
@@ -226,6 +226,7 @@ private:
   bool txBreak;  // Signal to break the GPIB transmission
   uint8_t deviceAddressed;
   bool isTerminatorDetected(uint8_t bytes[3], uint8_t eorSequence);
+  enum transmitMode _xmitMode;
 
   // Interrupt flag for MCP23S17
 #ifdef AR488_MCP23S17

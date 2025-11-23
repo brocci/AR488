@@ -6,7 +6,7 @@
 #include "AR488_Config.h"
 
 
-/***** AR488_Hardware.h, ver. 0.53.26, 08/10/2025 *****/
+/***** AR488_Hardware.h, ver. 0.53.30, 23/11/2025 *****/
 
 
 ///=================================///
@@ -384,11 +384,11 @@ void setPortPullupBits(PORT_t port, uint8_t reg);
 /***********************************/
 /***** ESP32 LAYOUT DEFINITION *****/
 /***** vvvvvvvvvvvvvvvvvvvvvvv *****/
-#ifdef ESP32_DEVKIT1_WROOM_32
+#ifdef ESP32_DEVKIT1_WROOM
 
 // Pin numbers represent GPIOnum
 
-#define ESP32_FUNCTIONS
+#define ESP32_NATIVE_FUNC
 
 #define DIO1_PIN  32   /* GPIB 1  */
 #define DIO2_PIN  33   /* GPIB 2  */
@@ -421,6 +421,8 @@ void setPortPullupBits(PORT_t port, uint8_t reg);
 /***** vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv *****/
 #ifdef ESP32_TTGO_T8_161
 
+#define ESP32_ARDUINO_FUNC
+
 #define DIO1_PIN  34   /* GPIB 1  */
 #define DIO2_PIN  35   /* GPIB 2  */
 #define DIO3_PIN  32   /* GPIB 3  */
@@ -451,6 +453,8 @@ void setPortPullupBits(PORT_t port, uint8_t reg);
 /***** ESP32_ESP32DEV LAYOUT DEFINITION *****/
 /***** vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv *****/
 #ifdef ESP32_ESP32DEV
+
+#define ESP32_ARDUINO_FUNC
 
 #define DIO1_PIN  33   /* GPIB 1  */
 #define DIO2_PIN  32   /* GPIB 2  */
@@ -483,6 +487,8 @@ void setPortPullupBits(PORT_t port, uint8_t reg);
 /***** vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv *****/
 #ifdef ESP32_LOLIN32_161
 
+#define ESP32_ARDUINO_FUNC
+
 #define DIO1_PIN  32   /* GPIB 1  */
 #define DIO2_PIN  33   /* GPIB 2  */
 #define DIO3_PIN  25   /* GPIB 3  */
@@ -514,6 +520,8 @@ void setPortPullupBits(PORT_t port, uint8_t reg);
 /***** vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv *****/
 #ifdef ESP32_S2_161
 
+#define ESP32_ARDUINO_FUNC
+
 #define DIO1_PIN   1   /* GPIB 1  */
 #define DIO2_PIN   2   /* GPIB 2  */
 #define DIO3_PIN   3   /* GPIB 3  */
@@ -544,6 +552,9 @@ void setPortPullupBits(PORT_t port, uint8_t reg);
 /***** ESP32_Wilhelm_AR488_ESP32S2_Rx LAYOUT DEFINITIONS *****/
 /***** vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv *****/
 #ifdef ESP32_Wilhelm_AR488_ESP32S2_R4
+
+#define ESP32_ARDUINO_FUNC
+
 #define DIO1_PIN   8    /* GPIB  8 */
 #define DIO2_PIN   9    /* GPIB  9 */
 #define DIO3_PIN   10   /* GPIB 10 */
@@ -566,6 +577,8 @@ void setPortPullupBits(PORT_t port, uint8_t reg);
 #endif // ESP32_Wilhelm_AR488_ESP32S2_R4
 
 #ifdef ESP32_Wilhelm_AR488_ESP32S2_R5
+
+#define ESP32_ARDUINO_FUNC
 
 #define DIO1_PIN   8    /* GPIB  8 */
 #define DIO2_PIN   9    /* GPIB  9 */
@@ -759,31 +772,10 @@ void gpioFuncList();
 
 
 /**************************************/
-/***** ESP32 DEFINITIONS SECTION *****/
-/***** vvvvvvvvvvvvvvvvvvvvvvvvvv *****/
-#ifdef ESP32_FUNCTIONS
-
-//#include <driver/gpio.h>
-#include <esp32-hal-gpio.h>
-#include <esp32-hal-matrix.h>
-#include <esp32/rom/gpio.h>
-#include <hal/gpio_hal.h>
-#include <soc/soc.h>
-
-unsigned long setRegisterMask(const uint8_t bus[]);
-
-#endif  // ESP32_FUNCTIONS
-/***** ^^^^^^^^^^^^^^^^^^^^^^^^^ *****/
-/***** ESP32 DEFINITIONS SECTION *****/
-/*************************************/
-
-
-
-/**************************************/
 /***** GLOBAL DEFINITIONS SECTION *****/
 /***** vvvvvvvvvvvvvvvvvvvvvvvvvv *****/
 
-void readyGpibDbus();
+void readyGpibDbus(uint8_t state);
 uint8_t readGpibDbus();
 void setGpibDbus(uint8_t db);
 //void setGpibState(uint8_t bits, uint8_t mask, uint8_t mode);
@@ -800,6 +792,9 @@ uint8_t getGpibPinState(uint8_t pin);
   void initRpGpioPins();
 #endif
 
+#if defined(ESP32)
+  void initEspGpioPins();
+#endif
 
 /***** ^^^^^^^^^^^^^^^^^^^^^^^^^^ *****/
 /***** GLOBAL DEFINITIONS SECTION *****/

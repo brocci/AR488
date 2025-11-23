@@ -14,7 +14,7 @@
 #include "AR488_Eeprom.h"
 
 
-/***** FWVER "AR488 GPIB controller, ver. 0.53.26, 08/10/2025" *****/
+/***** FWVER "AR488 GPIB controller, ver. 0.53.30, 23/11/2025" *****/
 
 /*
   Arduino IEEE-488 implementation by John Chajecki
@@ -451,7 +451,6 @@ void setup() {
     #endif
     #ifdef SN7516X_SC
       digitalWrite(SN7516X_SC, LOW);
-  bool eoiDetected = false;
     #endif
   }
 #endif
@@ -1851,7 +1850,6 @@ void spoll_h(char *params) {
 
       // Set GPIB control to controller active listner state (ATN unasserted), clear databus and set to input
       gpibBus.setControls(CLAS);
-      gpibBus.clearDataBus();
 
       // Read the response byte (usually device status) using handshake - suppress EOI detection
       state = gpibBus.readByte(&sb, false, &eoiDetected);
@@ -3284,7 +3282,7 @@ bool device_unt_h(){
   // Clear addressed state flag and set controls to listen
   if (gpibBus.isDeviceAddressedToTalk()) {
     gpibBus.setControls(DIDS);
-    gpibBus.clearDataBus();
+//    gpibBus.clearDataBus();
     return true;
   }
   return false;
