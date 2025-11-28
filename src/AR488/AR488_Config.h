@@ -7,7 +7,7 @@
 
 
 /***** Firmware version *****/
-#define FWVER "AR488 GPIB controller, ver. 0.53.30, 23/11/2025"
+#define FWVER "AR488 GPIB controller, ver. 0.53.31, 28/11/2025"
 
 
 /***** BOARD CONFIGURATION *****/
@@ -69,19 +69,20 @@
 
 #elif defined(ESP32)
   /** ESP32 variants **/
-  //#define ESP32_DEVKIT1_WROOM
+  #define ESP32_DEVKIT1_WROOM
   // David Douard / Johann Wilhelm board layouts
-  #define ESP32_TTGO_T8_161
+  //#define ESP32_TTGO_T8_161
   //#define ESP32_ESP32DEV
   //#define ESP32_LOLIN32_161   // ESP32_LOLIN32_161_V2 profile has the same pin assigments
   //#define ESP32_S2_161
 
 #elif defined(ARDUINO_ARCH_RP2040)
-  /** RP2040 Boards **/
+  /** RP2040/RP2350 Boards **/
   #define RAS_PICO_L1
   //#define RAS_PICO_L2
   //#define RAS_PICO_L3
   //#define RAS_PICO_L4
+  //#define RAS_PICO_L5
 
 //#elif defined(ARDUINO_NANO_RP2040_CONNECT)
 
@@ -183,8 +184,11 @@
 //  #define SN7516X_TE 17
 //  #define SN7516X_DC 45
 /*** Devkit v1 ***/
-  #define SN7516X_TE 2
-  // DC connected to REN
+//  #define SN7516X_TE 2
+  // DC to REN
+/*** Pico RP2040 ***/
+  #define SN7516X_TE 22
+  // DC to REN
 #endif
 
 

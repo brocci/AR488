@@ -6,7 +6,7 @@
 #include "AR488_Config.h"
 
 
-/***** AR488_Hardware.h, ver. 0.53.30, 23/11/2025 *****/
+/***** AR488_Hardware.h, ver. 0.53.31, 28/11/2025 *****/
 
 
 ///=================================///
@@ -737,6 +737,40 @@ void gpioFuncList();
 
 
 
+/****************************************/
+/***** RAS PICO LAYOUT 5 DEFINITION *****/
+/***** vvvvvvvvvvvvvvvvvvvvvvvvvvvv *****/
+#ifdef RAS_PICO_L5
+
+#define RAS_PICO_LAUTO
+
+void gpioFuncList();
+
+#define DIO1_PIN  10   /* GPIB 1  */
+#define DIO2_PIN  11   /* GPIB 2  */
+#define DIO3_PIN  12   /* GPIB 3  */
+#define DIO4_PIN  13   /* GPIB 4  */
+#define DIO5_PIN  14   /* GPIB 13 */
+#define DIO6_PIN  15   /* GPIB 14 */
+#define DIO7_PIN  20   /* GPIB 15 */
+#define DIO8_PIN  21   /* GPIB 16 */
+
+#define IFC_PIN    9   /* GPIB 9  */
+#define NDAC_PIN   8   /* GPIB 8  */
+#define NRFD_PIN   7   /* GPIB 7  */
+#define DAV_PIN    6   /* GPIB 6  */
+#define EOI_PIN    5   /* GPIB 5  */
+#define REN_PIN    3   /* GPIB 17 */
+#define SRQ_PIN    4   /* GPIB 10 */
+#define ATN_PIN    2   /* GPIB 11 */
+
+#endif // RAS_PICO_L5
+/***** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ *****/
+/***** RAS PICO LAYOUT 5 DEFINITION *****/
+/****************************************/
+
+
+
 /*********************************************/
 /***** NANO R4 RENESAS LAYOUT DEFINITION *****/
 /***** vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv *****/
@@ -774,6 +808,16 @@ void gpioFuncList();
 /**************************************/
 /***** GLOBAL DEFINITIONS SECTION *****/
 /***** vvvvvvvvvvvvvvvvvvvvvvvvvv *****/
+
+#if defined (AR488_CUSTOM)
+  #if defined (ESP32)
+    #define ESP32_NATIVE_FUNC
+  #elif defined (ARDUINO_ARCH_RP2040)
+    #define RAS_PICO_LAUTO
+  #else
+    #define AR488_CUSTOM_DEFAULT
+  #endif
+#endif
 
 void readyGpibDbus(uint8_t state);
 uint8_t readGpibDbus();
