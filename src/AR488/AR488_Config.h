@@ -75,6 +75,8 @@
   //#define ESP32_ESP32DEV
   //#define ESP32_LOLIN32_161   // ESP32_LOLIN32_161_V2 profile has the same pin assigments
   //#define ESP32_S2_161
+  //#define ESP32_Wilhelm_AR488_ESP32S2_R4
+  //#define ESP32_Wilhelm_AR488_ESP32S2_R5
 
 #elif defined(ARDUINO_ARCH_RP2040)
   /** RP2040/RP2350 Boards **/

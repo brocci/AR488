@@ -548,9 +548,9 @@ void setPortPullupBits(PORT_t port, uint8_t reg);
 
 
 
-/***********************************************/
+/*************************************************************/
 /***** ESP32_Wilhelm_AR488_ESP32S2_Rx LAYOUT DEFINITIONS *****/
-/***** vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv *****/
+/***** vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv *****/
 #ifdef ESP32_Wilhelm_AR488_ESP32S2_R4
 
 #define ESP32_ARDUINO_FUNC
@@ -600,9 +600,9 @@ void setPortPullupBits(PORT_t port, uint8_t reg);
 #define ATN_PIN    36   /* GPIB 36 */
 
 #endif // ESP32_Wilhelm_AR488_ESP32S2_R5
-/***** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ *****/
+/***** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ *****/
 /***** ESP32_Wilhelm_AR488_ESP32S2_Rx LAYOUT DEFINITIONS *****/
-/***********************************************/
+/*************************************************************/
 
 
 
