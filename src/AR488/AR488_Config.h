@@ -7,7 +7,7 @@
 
 
 /***** Firmware version *****/
-#define FWVER "AR488 GPIB controller, ver. 0.53.31, 28/11/2025"
+#define FWVER "AR488 GPIB controller, ver. 0.53.33, 12/12/2025"
 
 
 /***** BOARD CONFIGURATION *****/
@@ -95,8 +95,11 @@
   /* NOTE: Renesas RA4M1 boards work only with SN7516x buffer chips */
   #define RA4M1_NANO_R4
 
-#endif  // Board/layout selection
+#elif defined(__IMXRT1062__)
+  /** Teensy 4.1. boards **/
+  #define IMXRT1062_TEENSY41_01
 
+#endif  // Board/layout selection
 
 
 /***** SERIAL PORT CONFIGURATION *****/
@@ -187,8 +190,11 @@
 //  #define SN7516X_TE 2
   // DC to REN
 /*** Pico RP2040 ***/
-  #define SN7516X_TE 22
+//  #define SN7516X_TE 22
   // DC to REN
+/*** Teensy 4.1 ***/
+//  #define SN7516X_TE 2
+//  #define SN7516X_DC 3
 #endif
 
 
