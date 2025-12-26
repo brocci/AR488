@@ -3,7 +3,7 @@
 #include "AR488_Eeprom.h"
 
 
-/***** AR488_Eeprom.cpp, ver. 0.01.06, 08/10/2025 *****/
+/***** AR488_Eeprom.cpp, ver. 0.01.07, 26/12/2025 *****/
 
 /*
  * EEPROM functions implementation
@@ -11,8 +11,8 @@
 
 
 /***** Forward declarations of internal functions *****/
-uint16_t getCRC16(uint8_t bytes[], uint16_t bsize);
-unsigned long int getCRC32(uint8_t bytes[], uint16_t bsize);
+uint16_t getCRC16(uint8_t bytes[], size_t bsize);
+unsigned long int getCRC32(uint8_t bytes[], size_t bsize);
 
 
 /********************************/
