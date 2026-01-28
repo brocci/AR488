@@ -8,7 +8,7 @@ This sketch represents a rewrite of that work and implements the full set of Pro
 To build an interface, at least one Arduino board will be required to act as the interface hardware. Arduino boards provide a low cost alternative to other commercial interfaces. Currently the following boards are supported:
 
 <table>
-<tr><td><i>MCU</i></td><td><i>Board</i></td><td><i>Serial Ports</i></td><td><i>Comments and layouts</i></td></tr>
+<tr><td><i>MCU</i></td><td><i>Board</i></td></td><td><i>Comments and layouts</i></td></tr>
 <tr><td>328p</td><td>Uno R3</td><td>Layout as per original project by Emanuelle Girlando. Only two pins (6 & 13) remain spare as the remainder are all used to interface with the GPIB bus.</td></tr>
 
 <tr><td>328p</td><td>Nano</td><td>Identical to Uno.</td></tr>
