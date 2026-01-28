@@ -98,7 +98,6 @@ private:
   #define DB_HEXA_PRINT(msg, barray, bsize) debugPort.print(msg);printHexArray(barray, bsize)
   #define DB_HEXB_PRINT(msg, buf, bsize) debugPort.print(msg);printHexBuf(buf, bsize)
 
-
 #else
 
   #define DEBUG_START()

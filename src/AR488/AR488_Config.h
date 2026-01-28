@@ -126,7 +126,7 @@
 #endif
 
 /***** Debug port *****/
-#define DEBUG_ENABLE
+//#define DEBUG_ENABLE
 #ifdef DEBUG_ENABLE
   // Serial port device
   #define DB_SERIAL_PORT Serial

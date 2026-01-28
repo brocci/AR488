@@ -706,6 +706,7 @@ enum receiveState GPIBbus::receiveData(Stream &dataStream, bool detectEoi, bool 
   //  DB_PRINT(F("ATN: "), (isAsserted(ATN ? 1 : 0));
   DB_PRINT(F("TMO: "), cfg.rtmo);
   DB_PRINT(F("Bytes read:  "), x);
+  DB_PRINT(F("Receive Data hstatus: "), hstate);
   DB_PRINT(F("<- End listen."), "");
 #endif
 
