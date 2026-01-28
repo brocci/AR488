@@ -7,7 +7,7 @@
 
 
 /***** Firmware version *****/
-#define FWVER "AR488 GPIB controller, ver. 0.53.34, 26/12/2025"
+#define FWVER "AR488 GPIB controller, ver. 0.53.37, 28/01/2026"
 
 
 /***** BOARD CONFIGURATION *****/
@@ -126,7 +126,7 @@
 #endif
 
 /***** Debug port *****/
-//#define DEBUG_ENABLE
+#define DEBUG_ENABLE
 #ifdef DEBUG_ENABLE
   // Serial port device
   #define DB_SERIAL_PORT Serial

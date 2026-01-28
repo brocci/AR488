@@ -76,16 +76,14 @@ private:
   template<typename T1, typename T2>
   void debugPrint(const char * function, const char * filestr, int line, T1 msg1, T2 msg2){
     const char * filename = (strrchr(filestr, '/') ? strrchr(filestr, '/') + 1 : filestr);
-//    funcstr[strrchr(funcstr,'(')] = '\0';
-//    const char * function = strrchr(funcstr,' ') + 1;
-    dataPort.print(filename);
-    dataPort.print(':');
-    dataPort.print(line);
-    dataPort.print(" (");
-    dataPort.print(function);
-    dataPort.print(") > ");
-    dataPort.print(msg1);
-    dataPort.println(msg2);
+    debugPort.print(filename);
+    debugPort.print(':');
+    debugPort.print(line);
+    debugPort.print(" (");
+    debugPort.print(function);
+    debugPort.print(") > ");
+    debugPort.print(msg1);
+    debugPort.println(msg2);
   }
 
   void printHex(uint8_t byteval);

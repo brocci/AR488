@@ -14,7 +14,7 @@
 #include "AR488_Eeprom.h"
 
 
-/***** FWVER "AR488 GPIB controller, ver. 0.53.34, 26/12/2025" *****/
+/***** FWVER "AR488 GPIB controller, ver. 0.53.37, 28/01/2026" *****/
 
 /*
   Arduino IEEE-488 implementation by John Chajecki
@@ -197,58 +197,59 @@ static const char cmdHelp[] PROGMEM = {
 
 
 static const char cmdHelpPrologix[] PROGMEM = {
-  "\nPrologix Compatible Commands:\n"
-  "addr:\tDisplay/set device address\n"
-  "auto:\tAutomatically request talk and read response\n"
-  "clr:\tSend Selected Device Clear to current GPIB address\n"
-  "eoi:\tEnable/disable assertion of EOI signal\n"
-  "eor:\tShow or set end of receive character(s)\n"
-  "eos:\tSpecify GPIB termination character\n"
+  "Prologix Compatible Commands >\n"
+  "addr:\t\tDisplay/set device address\n"
+  "auto:\t\tAutomatically request talk and read response\n"
+  "clr:\t\tSend Selected Device Clear to current GPIB address\n"
+  "eoi:\t\tEnable/disable assertion of EOI signal\n"
+  "eor:\t\tShow or set end of receive character(s)\n"
+  "eos:\t\tSpecify GPIB termination character\n"
   "eot_char:\tSet character to append to USB output when EOT enabled\n"
   "eot_enable:\tEnable/Disable appending user specified character to USB output on EOI detection\n"
-  "help:\tThis message\n"
-  "ifc:\tAssert IFC signal for 150 miscoseconds - make AR488 controller in charge\n"
-  "llo:\tLocal lockout - disable front panel operation on instrument\n"
-  "loc:\tEnable front panel operation on instrument\n"
-  "lon:\tPut controller in listen-only mode (listen to all traffic)\n"
-  "mode:\tSet the interface mode (1=controller/0=device)\n"
-  "read:\tRead data from instrument\n"
+  "help:\t\tThis message\n"
+  "ifc:\t\tAssert IFC signal for 150 miscoseconds - make AR488 controller in charge\n"
+  "llo:\t\tLocal lockout - disable front panel operation on instrument\n"
+  "loc:\t\tEnable front panel operation on instrument\n"
+  "lon:\t\tPut controller in listen-only mode (listen to all traffic)\n"
+  "mode:\t\tSet the interface mode (1=controller/0=device)\n"
+  "read:\t\tRead data from instrument\n"
   "read_tmo_ms:\tRead timeout specified between 1 - 3000 milliseconds\n"
-  "rst:\tReset the controller\n"
+  "rst:\t\tReset the controller\n"
   "savecfg:\tSave configration\n"
-  "spoll:\tSerial poll the addressed host or all instruments\n"
-  "srq:\tReturn status of srq signal (1-srq asserted/0-srq not asserted)\n"
+  "spoll:\t\tSerial poll the addressed host or all instruments\n"
+  "srq:\t\tReturn status of srq signal (1-srq asserted/0-srq not asserted)\n"
   "status:\tSet the status byte to be returned on being polled (bit 6 = RQS, i.e SRQ asserted)\n"
-  "trg:\tSend trigger to selected devices (up to 15 addresses)\n"
-  "ver:\tDisplay firmware version\n"
+  "trg:\t\tSend trigger to selected devices (up to 15 addresses)\n"
+  "ver:\t\tDisplay firmware version\n"
 };
 
 
 static const char cmdHelpExtended[] PROGMEM = {
-  "/nExtended custom commands:"
-  "aspoll:\tSerial poll all instruments (alias: ++spoll all)\n"
-  "dcl:\tSend unaddressed (all) device clear  [power on reset] (is the rst?)\n"
+  "Extended custom commands >\n"
+  "aspoll:\tSerial poll all instruments (alias = ++spoll all)\n"
+  "dcl:\t\tSend unaddressed (all) device clear  [power on reset] (is the rst?)\n"
   "default:\tSet configuration to controller default settings\n"
-  "id:\tShow interface ID information - see also: 'id name'; 'id serial'; 'id verstr'\n"
+  "flags:\t\tDisplay handhsaking flags - bits 0 1 & 2 control Ready, ReadOk and SendOK\n"
+  "id:\t\tShow interface ID information - see also > 'id name'; 'id serial'; 'id verstr'\n"
   "id name:\tShow/Set the name of the interface\n"
   "id serial:\tShow/Set the serial number of the interface\n"
   "id verstr:\tShow/Set the version string sent in reply to ++ver e.g. \"GPIB-USB\"). Max 47 chars, excess truncated.\n"
-  "idn:\tEnable/Disable reply to *idn? (disabled by default)\n"
-  "macro:\tRun a macro (if macro support is compiled)\n"
-  "fndl:\tFind listners\n"
-  "ppoll:\tConduct a parallel poll\n"
-  "ren:\tAssert or Unassert the REN signal\n"
+  "idn:\t\tEnable/Disable reply to *idn? (disabled by default)\n"
+  "macro:\t\tRun a macro (if macro support is compiled)\n"
+  "fndl:\t\tFind listners\n"
+  "ppoll:\t\tConduct a parallel poll\n"
+  "ren:\t\tAssert or Unassert the REN signal\n"
   "repeat:\tRepeat a given command and return result\n"
   "secread:\tRead from a secondary address\n"
   "secsend:\tSend data or command to a secondary address\n"
   "setvstr:\tDEPRECATED - see id verstr\n"
   "srqauto:\tAutomatically conduct serial poll when SRQ is asserted\n"
-  "tct:\tSignal remote device to take control\n"
-  "ton:\tPut controller in talk-only mode (send data only)\n"
-  "unl:\tUnlisten the GPIB bus\n"
-  "unt:\tUntalk the GPIB bus"
+  "tct:\t\tSignal remote device to take control\n"
+  "ton:\t\tPut controller in talk-only mode (send data only)\n"
+  "unl:\t\tUnlisten the GPIB bus\n"
+  "unt:\t\tUntalk the GPIB bus\n"
   "verbose:\tVerbose (human readable) mode\n"
-  "xdiag:\tBus diagnostics (see the doc)\n"
+  "xdiag:\t\tBus diagnostics (see the doc)\n"
 };
 
 
@@ -1978,45 +1979,68 @@ void lon_h(char *params) {
 
 /***** Print help *****/
 bool printHelp(const char * help, char * keyword){
-//  char c, t;
-  char c;
-  char token[20];
-  uint8_t i;
+  uint8_t tksize = 20;
+  uint8_t hlnsize = 128;
+  char c = '\0';
+  char token[tksize];
+  char helpline[hlnsize];
+  uint8_t tcnt = 0;
+  size_t ccnt = 0;
   bool found = false;
+  size_t helplen = strlen_P(help);
 
-  i = 0;
-  for (size_t k = 0; k < strlen_P(help); k++) {
-    c = pgm_read_byte_near(help + k);
+  memset(token, '\0', tksize);
+  memset(helpline, '\0', hlnsize);
 
+  while (ccnt < helplen) {
 
-    if (i < 20) {
-      if(c == ':') {
-        token[i] = 0;
-        if((keyword == NULL) || (strcmp(token, keyword) == 0)) {
-          dataPort.print(F("++"));
-          dataPort.print(token);
-//          dataPort.print(c);
-          k++;
-          /*
-          t = pgm_read_byte_near(cmdHelp + k);
-          dataPort.print(F(" ["));
-          dataPort.print(t);
-          dataPort.print(F("]"));
-          */
-          i = 255; // means we need to print until \n
-        }
-        
-      } else {
-        token[i] = c;
-        i++;
+    while ( tcnt < hlnsize ) {
+
+      c = pgm_read_byte_near(help + ccnt);
+      ccnt++;
+
+      if (c == ':') {
+        helpline[tcnt] = '\0';
+        if (tcnt < tksize) strlcpy(token, helpline, tcnt+1);
+        tcnt = 0;
+      }else if (c == '\n') {
+        helpline[tcnt] = '\0';
+        break;
+      }else{
+        helpline[tcnt] = c;
+        tcnt++;
       }
-    } else if (i == 255) {
-      dataPort.print(c);
+
     }
-    if (c == '\n') {
-      i = 0;
+
+    if (token[0]) {
+
+      if (keyword) {
+        if ( (strncasecmp(token, keyword, strlen(keyword)) == 0) ) found = true;
+      }
+
+      if( (keyword == NULL) || found ) {
+        dataPort.print(F("++"));
+        dataPort.print(token);
+        dataPort.println(helpline);
+        memset(token, '\0', tksize);
+      }
+
+      if (found) return true;
+
+    }else{
+
+      if (keyword == NULL) {        // Print headers only of full help
+        dataPort.println(helpline);
+        dataPort.println();
+      }
+
     }
+
+    tcnt = 0;
+
   }
+
   return found;
 }
 
@@ -2029,20 +2053,23 @@ void help_h(char * params) {
   bool found = false;
 
   if (params != NULL) {
-    param = strtok(params, " ,\t");
-    if (strncasecmp(param, "prologix", 8) == 0) {
-      keyword = strtok(NULL, " ,\t");
+    param = strtok(params, " \t\n");
+    if (strncasecmp(param, "pro", 8) == 0) {
+      keyword = strtok(NULL, "\n");
       printHelp(cmdHelpPrologix, keyword);
-    }else if (strncasecmp(param, "extended", 8) == 0) {
-      keyword = strtok(NULL, " ,\t");
+    }else if (strncasecmp(param, "ext", 8) == 0) {
+      keyword = strtok(NULL, "\n");
       printHelp(cmdHelpExtended, keyword);
     }else{
-      printHelp(cmdHelpPrologix, param);
-      if (!found) printHelp(cmdHelpExtended, param);
+      found = printHelp(cmdHelpPrologix, param);
+      if (!found) found = printHelp(cmdHelpExtended, param);
+      if (!found) dataPort.println(F("Not found."));
     }
   }else{
     printHelp(cmdHelpPrologix, NULL);
+    dataPort.println();
     printHelp(cmdHelpExtended, NULL);
+    dataPort.println();
   }  
 }
 
@@ -2741,9 +2768,6 @@ void fndl_h(char *params) {
       continue;
     }
 
-//Serial.print("PRI: ");
-//Serial.println(pri);
-
     // Send UNL + UNT + LAD (addressDevice function adds 0x20 to pri)
     if (gpibBus.addressDevice(pri, 0xFF, TOLISTEN) == ERR) {
       errorMsg(3);
@@ -2755,7 +2779,7 @@ void fndl_h(char *params) {
 
     if (gpibBus.isAsserted(NDAC_PIN)) {
  
-      if (acnt>0) Serial.print(',');
+      if (acnt>0) dataPort.print(',');
       dataPort.print(pri);
       acnt++;
 
@@ -2871,13 +2895,6 @@ void send_h(char *params) {
     }
 
     if (param[strlen(param)-1] == '?') isQuery = true;
-
-
-/*
-Serial.println(pri);
-Serial.println(sec);
-Serial.println(param);
-*/
 
 //    gpibBus.unAddressDevice();
     gpibBus.addressDevice(pri, sec, TOLISTEN);
