@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "AR488_ComPorts.h"
 
-/***** AR488_ComPorts.cpp, ver. 0.53.12, 26/02/2023 *****/
+/***** AR488_ComPorts.cpp, ver. 0.53.38, 28/01/2026 *****/
 
 
 /***** DEVNULL Library *****
@@ -120,6 +120,12 @@ int DEVNULL::lastByte()
   void printHex(uint8_t byteval) {
     char x[4] = {'\0'};
     sprintf(x,"%02X ", byteval);
+    debugPort.print(x);
+  }
+
+  void printHexAscii(uint8_t byteval) {
+    char x[6] = {'\0'};
+    sprintf(x,"%c [%02X]\n", byteval, byteval);
     debugPort.print(x);
   }
 

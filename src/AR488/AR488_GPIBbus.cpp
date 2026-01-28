@@ -3,7 +3,7 @@
 #include "AR488_Config.h"
 #include "AR488_GPIBbus.h"
 
-/***** AR488_GPIB.cpp, ver. 0.53.33, 12/12/2025 *****/
+/***** AR488_GPIB.cpp, ver. 0.53.38, 28/01/2026 *****/
 
 
 /****** Process status values *****/
@@ -654,7 +654,12 @@ enum receiveState GPIBbus::receiveData(Stream &dataStream, bool detectEoi, bool 
     // If successfully received character
     if (hstate == HANDSHAKE_COMPLETE) {
 #ifdef DEBUG_GPIBbus_RECEIVE
-      DB_HEX_PRINT(bytes[0]);
+      if (&dataPort == &debugPort) {
+        DB_HEX_ASC_PRINT(bytes[0]);
+      }else{
+        dataStream.print((char)bytes[0]);
+        DB_HEX_PRINT(bytes[0]);
+      }
 #else
       // Output the character to the serial port
       dataStream.print((char)bytes[0]);

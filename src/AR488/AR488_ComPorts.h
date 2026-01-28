@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "AR488_Config.h"
 
-/***** AR488_ComPorts.cpp, ver. 0.53.12, 26/02/2023 *****/
+/***** AR488_ComPorts.cpp, ver. 0.53.38, 28/01/2026*****/
 
 
 /***** DEVNULL Library *****
@@ -87,6 +87,7 @@ private:
   }
 
   void printHex(uint8_t byteval);
+  void printHexAscii(uint8_t byteval);
   void printHexArray(uint8_t barray[], size_t asize);
   void printHexBuf(char * buf, size_t bsize);
 
@@ -95,6 +96,7 @@ private:
   #define DB_RAW_PRINT(msg) debugPort.print(msg)
   #define DB_RAW_PRINTLN(msg) debugPort.println(msg)
   #define DB_HEX_PRINT(byteval) printHex(byteval)
+  #define DB_HEX_ASC_PRINT(byteval) printHexAscii(byteval)
   #define DB_HEXA_PRINT(msg, barray, bsize) debugPort.print(msg);printHexArray(barray, bsize)
   #define DB_HEXB_PRINT(msg, buf, bsize) debugPort.print(msg);printHexBuf(buf, bsize)
 
