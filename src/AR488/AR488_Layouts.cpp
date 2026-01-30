@@ -3,7 +3,7 @@
 #include "AR488_Config.h"
 #include "AR488_Layouts.h"
 
-/***** AR488_Hardware.cpp, ver. 0.53.33, 12/12/2025 *****/
+/***** AR488_Hardware.cpp, ver. 0.53.39, 29/01/2026 *****/
 
 ///=================================================///
 ///       Hardware layout function definitions      ///
@@ -1404,7 +1404,7 @@ uint8_t getGpibPinState(uint8_t pin){
 */
 
 
-uint8_t readPortPullupReg(PORT_t port){
+uint8_t readPortPullupReg(PORT_t& port){
   uint8_t reg = 0;
   reg |= (port.PIN0CTRL & PORT_PULLUPEN_bm) >> 3;
   reg |= (port.PIN1CTRL & PORT_PULLUPEN_bm) >> 2;
@@ -1418,7 +1418,7 @@ uint8_t readPortPullupReg(PORT_t port){
 }
 
 
-void setPortPullupBits(PORT_t port, uint8_t reg){
+void setPortPullupBits(PORT_t& port, uint8_t reg){
   port.PIN0CTRL |= ((reg<<3) & PORT_PULLUPEN_bm);
   port.PIN1CTRL |= ((reg<<2) & PORT_PULLUPEN_bm);
   port.PIN2CTRL |= ((reg<<1) & PORT_PULLUPEN_bm);

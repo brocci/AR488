@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "AR488_Config.h"
 
-/***** AR488_ComPorts.cpp, ver. 0.53.38, 28/01/2026*****/
+/***** AR488_ComPorts.cpp, ver. 0.53.39, 29/01/2026*****/
 
 
 /***** DEVNULL Library *****

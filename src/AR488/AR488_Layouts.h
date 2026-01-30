@@ -6,7 +6,7 @@
 #include "AR488_Config.h"
 
 
-/***** AR488_Hardware.h, ver. 0.53.33, 12/12/2025 *****/
+/***** AR488_Hardware.h, ver. 0.53.39, 29/09/2026 *****/
 
 
 ///=================================///
@@ -352,8 +352,8 @@ uint8_t getMcpIntAReg();
 #ifdef POE_ETHERNET_GPIB_ADAPTOR
 
 uint8_t reverseBits(uint8_t dbyte);
-uint8_t readPortPullupReg(PORT_t port);
-void setPortPullupBits(PORT_t port, uint8_t reg);
+uint8_t readPortPullupReg(PORT_t& port);
+void setPortPullupBits(PORT_t& port, uint8_t reg);
 
 /***** KOFEN's POE Ethernet Gpib Adaptor pinout *****/
 #define DIO1_PIN  22  /* GPIB 1  : PORTD bit 0 */
