@@ -14,7 +14,7 @@
 #include "AR488_Eeprom.h"
 
 
-/***** FWVER "AR488 GPIB controller, ver. 0.53.39, 29/01/2026" *****/
+/***** FWVER "AR488 GPIB controller, ver. 0.53.41, 20/04/2026" *****/
 
 /*
   Arduino IEEE-488 implementation by John Chajecki
@@ -417,12 +417,16 @@ void setup() {
   //(will only read if previous config has already been saved)
   if (!isEepromClear()) {
 //DB_RAW_PRINTLN(F("EEPROM has data."));
-    if (!epReadData(gpibBus.cfg.db, GPIB_CFG_SIZE)) {
+//    if (!epReadData(gpibBus.cfg.db, GPIB_CFG_SIZE)) {
+//    if ( !epReadData(gpibBus.cfg, gpibBus.getCfgSize()) ) {
+    if ( !epReadData(gpibBus.cfg) ) {
       // CRC check failed - config data does not match EEPROM
 //DB_RAW_PRINTLN(F("CRC check failed. Erasing EEPROM...."));
       epErase();
       gpibBus.setDefaultCfg();
-      epWriteData(gpibBus.cfg.db, GPIB_CFG_SIZE);
+//      epWriteData(gpibBus.cfg.db, GPIB_CFG_SIZE);
+//      epWriteData(gpibBus.cfg, gpibBus.getCfgSize() );
+      epWriteData(gpibBus.cfg);
 //DB_RAW_PRINTLN(F("EEPROM data set to default."));
     }
   }
@@ -1948,7 +1952,8 @@ void stat_h(char *params) {
 /***** Save controller configuration *****/
 void save_h() {
 #ifdef E2END
-  epWriteData(gpibBus.cfg.db, GPIB_CFG_SIZE);
+//  epWriteData(gpibBus.cfg.db, GPIB_CFG_SIZE);
+  epWriteData(gpibBus.cfg);
   if (isVerb) dataPort.println(F("Settings saved."));
 #else
   dataPort.println(F("EEPROM not supported."));
@@ -2115,6 +2120,8 @@ void default_h(char *params) {
       errorMsg(2);
     }
   }
+  #else
+    (void)params;
   #endif
   gpibBus.setDefaultCfg();
 }
@@ -2124,7 +2131,7 @@ void default_h(char *params) {
 void eor_h(char *params) {
   uint16_t val;
   if (params != NULL) {
-    if (notInRange(params, 0, 15, val)) return;
+    if (notInRange(params, 0, 7, val)) return;
     gpibBus.cfg.eor = (uint8_t)val;
     if (isVerb) {
       dataPort.print(F("Set EOR to: "));

@@ -76,6 +76,28 @@
 #define WITH_EOI true
 
 
+    struct GPIBcfg {
+      bool eot_en;      // Enable/disable append EOT char to string received from GPIB bus before sending to USB
+      bool eoi;         // Assert EOI on last data char written to GPIB - 0-disable, 1-enable
+      uint8_t cmode;    // Controller/device mode (0=unset, 1=device, 2=controller)
+      uint8_t caddr;    // This interface address
+      uint8_t paddr;    // Primary address to use when addressing a device
+      uint8_t saddr;    // Secondary address to use when addressing a device
+      uint8_t eos;      // EOS (end of send to GPIB) characters [0=CRLF, 1=CR, 2=LF, 3=None]
+      uint8_t stat;     // Status byte to return in response to a serial poll
+      uint8_t amode;    // Auto mode setting (0=off; 1=Prologix; 2=onquery; 3=continuous);
+      uint16_t rtmo;    // Read timout (read_tmo_ms) in milliseconds - 0-32000 - value depends on instrument
+      uint8_t eot_ch;   // EOT character to append to USB output when EOI signal detected
+      char vstr[48];    // Custom version string
+      uint8_t eor;      // EOR (end of receive from GPIB instrument) characters [0=CRLF, 1=CR, 2=LF, 3=None, 4=LFCR, 5=ETX, 6=CRLF+ETX, 7=SPACE]
+      char sname[16];   // Interface short name
+      uint32_t serial;  // Serial number
+      uint8_t idn;      // Send ID in response to *idn? 0=disable, 1=send name; 2=send name+serial
+      uint8_t hflags;   // Handshaking indicator flags
+    };
+
+constexpr size_t GPIBcfgSize = sizeof(GPIBcfg);
+
 enum gpibHandshakeState: uint8_t {
   // Common
   HANDSHAKE_START,
@@ -121,6 +143,10 @@ enum transmitMode: uint8_t {
 };
 
 
+
+
+
+
 /***** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ *****/
 /***** GPIB COMMAND & STATUS DEFINITIONS *****/
 /*********************************************/
@@ -136,30 +162,14 @@ class GPIBbus {
 public:
 
   /***** Controller configuration *****/
-  union GPIBconf {
-    struct {
-      bool eot_en;      // Enable/disable append EOT char to string received from GPIB bus before sending to USB
-      bool eoi;         // Assert EOI on last data char written to GPIB - 0-disable, 1-enable
-      uint8_t cmode;    // Controller/device mode (0=unset, 1=device, 2=controller)
-      uint8_t caddr;    // This interface address
-      uint8_t paddr;    // Primary address to use when addressing a device
-      uint8_t saddr;    // Secondary address to use when addressing a device
-      uint8_t eos;      // EOS (end of send to GPIB) characters [0=CRLF, 1=CR, 2=LF, 3=None]
-      uint8_t stat;     // Status byte to return in response to a serial poll
-      uint8_t amode;    // Auto mode setting (0=off; 1=Prologix; 2=onquery; 3=continuous);
-      uint16_t rtmo;    // Read timout (read_tmo_ms) in milliseconds - 0-32000 - value depends on instrument
-      char eot_ch;      // EOT character to append to USB output when EOI signal detected
-      char vstr[48];    // Custom version string
-      uint8_t eor;      // EOR (end of receive from GPIB instrument) characters [0=CRLF, 1=CR, 2=LF, 3=None, 4=LFCR, 5=ETX, 6=CRLF+ETX, 7=SPACE]
-      char sname[16];   // Interface short name
-      uint32_t serial;  // Serial number
-      uint8_t idn;      // Send ID in response to *idn? 0=disable, 1=send name; 2=send name+serial
-      uint8_t hflags;   // Handshaking indicator flags
-    };
-    uint8_t db[GPIB_CFG_SIZE];
-  };
+//  union GPIBconf {
+//    GPIBcfg;
+//    uint8_t db[GPIB_CFG_SIZE];
+//    uint8_t db[GPIBcfgSize];
+//  };
 
-  union GPIBconf cfg;
+//  union GPIBconf cfg;
+  GPIBcfg cfg;
 
   uint8_t cstate = 0;
 
@@ -178,6 +188,7 @@ public:
   void assertSignal(uint8_t sig);
   void clearSignal(uint8_t sig);
   void clearAllSignals();
+//  size_t getCfgSize();
 
 
   bool isController();
@@ -227,6 +238,7 @@ private:
   uint8_t deviceAddressed;
   bool isTerminatorDetected(uint8_t bytes[3], uint8_t eorSequence);
   enum transmitMode _xmitMode;
+  size_t cfgSize;
 
   // Interrupt flag for MCP23S17
 #ifdef AR488_MCP23S17

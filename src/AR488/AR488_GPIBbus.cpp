@@ -31,6 +31,7 @@ GPIBbus::GPIBbus() {
   setDefaultCfg();
   cstate = 0;
   deviceAddressed = TONONE;
+  cfgSize = sizeof(cfg);
 }
 
 
@@ -79,6 +80,13 @@ void GPIBbus::setDefaultCfg() {
   cfg = { false, false, 2, 0, 1, 0xFF, 0, 0, 0, 1200, 0, { '\0' }, 0, { '\0' }, 0, 0, 0 };
 }
 
+
+/***** Return the size of the configuration object *****/
+/*
+size_t GPIBbus::getCfgSize(){
+  return GPIBcfgSize;
+}
+*/
 
 /***** Set bus into Device mode *****/
 void GPIBbus::startDeviceMode() {
