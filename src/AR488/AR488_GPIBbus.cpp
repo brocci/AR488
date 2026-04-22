@@ -3,7 +3,7 @@
 #include "AR488_Config.h"
 #include "AR488_GPIBbus.h"
 
-/***** AR488_GPIB.cpp, ver. 0.53.39, 29/01/2026 *****/
+/***** AR488_GPIB.cpp, ver. 0.53.42, 22/04/2026 *****/
 
 
 /****** Process status values *****/
@@ -1036,7 +1036,7 @@ bool GPIBbus::unAddressDevice() {
 /***** Untalk bus then address a device *****/
 bool GPIBbus::addressDevice(uint8_t pri, uint8_t sec=0xFF, uint8_t dir=TOLISTEN) {
 
-  if (pri>30) return ERR;
+  if (pri>31) return ERR;
 
   if ( sec<0x60 || (sec>0x7E && sec!=0xFF) ) return ERR;
 

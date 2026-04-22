@@ -14,7 +14,7 @@
 #include "AR488_Eeprom.h"
 
 
-/***** FWVER "AR488 GPIB controller, ver. 0.53.41, 20/04/2026" *****/
+/***** FWVER "AR488 GPIB controller, ver. 0.53.42, 22/04/2026" *****/
 
 /*
   Arduino IEEE-488 implementation by John Chajecki
@@ -1660,13 +1660,13 @@ void ifc_h() {
 
 /***** Send a trigger command *****/
 void trg_h(char *params) {
-  const uint8_t maxparam = 15;
+  const uint8_t maxparam = 32;
   char *param;
   uint8_t addrs[maxparam] = {0};
   uint16_t val = 0;
   uint8_t cnt = 0;
 
-  addrs[0] = addrs[0]; // Meaningless as both are zero but defaults compiler warning!
+  addrs[0] = addrs[0]; // Meaningless as both are zero but defeats compiler warning!
 
   // Read parameters
   if (params == NULL) {
@@ -1684,7 +1684,7 @@ void trg_h(char *params) {
       if (param == NULL) {
         break;  // Stop when there are no more parameters
       }else{    
-        if (notInRange(param, 1, 30, val)) return;
+        if (notInRange(param, 1, 31, val)) return;
         addrs[cnt] = (uint8_t)val;
         cnt++;
       }
@@ -1746,7 +1746,8 @@ void rst_h() {
 /***** Serial Poll Handler *****/
 void spoll_h(char *params) {
   char *param;
-  uint8_t addrs[15];
+  const uint8_t acnt = 32;
+  uint8_t addrs[acnt] = {0};
   uint8_t sb = 0;
   enum gpibHandshakeState state;
   uint8_t j = 0;
@@ -1754,25 +1755,20 @@ void spoll_h(char *params) {
   bool all = false;
   bool eoiDetected = false;
 
-  // Initialise address array
-  for (int i = 0; i < 15; i++) {
-    addrs[i] = 0;
-  }
-
   // Read parameters
   if (params == NULL) {   // No parameters - trigger addressed device only
     addrs[0] = gpibBus.cfg.paddr;
     j = 1;
   } else if (strncasecmp(params, "all", 3) == 0) {   // ALL parameter given
     all = true;
-    j = 30;
+    j = acnt;
     if (isVerb) dataPort.println(F("Serial poll of all devices requested..."));
   }
 
   if (j == 0) {
 
     // Read address parameters into array
-    while (j < 15) {
+    while (j < acnt) {
 
       if (j == 0) {
         param = strtok(params, " \t");
@@ -1796,7 +1792,7 @@ void spoll_h(char *params) {
       }
 
       // Valid GPIB address parameter ?
-      if (notInRange(param, 1, 30, addrval)) return;
+      if (notInRange(param, 1, 31, addrval)) return;
 
       // All good
       addrs[j] = (uint8_t)addrval;
@@ -1865,7 +1861,7 @@ void spoll_h(char *params) {
         gpibBus.setControls(CTAS);
 
         // Process response
-        if (j == 30) {
+        if (j == acnt) {
           // If all, return specially formatted response: SRQ:addr,status
           // but only when RQS bit set
           if (sb & 0x40) {
@@ -2681,8 +2677,9 @@ bool isRange(char * rangestr, size_t rsize, unsigned long values[2] ) {
 
 void fndl_h(char *params) {
   char *param;
+  const uint8_t amax = 32;
   uint16_t addrval = 0;
-  uint8_t addrList[15] = {0};
+  uint8_t addrList[amax] = {0};
   uint16_t tmo = gpibBus.cfg.rtmo;
   uint8_t acnt = 0;
   uint8_t i = 0;
@@ -2692,7 +2689,7 @@ void fndl_h(char *params) {
   bool list = false;
 
   // Initialise arrays
-  for (int i = 0; i < 15; i++) {
+  for (int i = 0; i < acnt; i++) {
     addrList[i] = 0;
   }
 
@@ -2704,7 +2701,7 @@ void fndl_h(char *params) {
     // No parameters given - no action to be taken
   //  errorMsg(1);
   //  return;
-    j = 31; // Same as 'all'
+    j = amax; // Same as 'all'
   }
 
   // Is it a range?
@@ -2720,12 +2717,12 @@ void fndl_h(char *params) {
 
   // Requested 'all'?
   if ( strncasecmp(params, "all", 4) == 0) {
-    j = 31;
+    j = amax;
   }
 
   if (j==0) {
     // Read address parameters into array
-    while (j < 15) {
+    while (j < amax) {
       if (j == 0) {
         param = strtok(params, " ,\t");
       } else {
@@ -2748,7 +2745,7 @@ void fndl_h(char *params) {
       }
 
       // Valid range
-      if (notInRange(param, 0, 30, addrval)) return;
+      if (notInRange(param, 0, 31, addrval)) return;
       addrList[j] = (uint8_t)addrval;
       j++;
 

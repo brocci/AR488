@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "AR488_ComPorts.h"
 
-/***** AR488_ComPorts.cpp, ver. 0.53.39, 29/01/2026 *****/
+/***** AR488_ComPorts.cpp, ver. 0.53.42, 22/04/2026 *****/
 
 
 /***** DEVNULL Library *****
@@ -117,15 +117,20 @@ int DEVNULL::lastByte()
 
   #endif
 
+
   void printHex(uint8_t byteval) {
-    char x[4] = {'\0'};
-    sprintf(x,"%02X ", byteval);
+    size_t s = sizeof(unsigned int) * 4;
+    size_t xlen;
+    char x[s] = {'\0'};
+    xlen = snprintf(x, s, "%02X ", byteval);
     debugPort.print(x);
   }
 
   void printHexAscii(uint8_t byteval) {
-    char x[6] = {'\0'};
-    sprintf(x,"%c [%02X]\n", byteval, byteval);
+    size_t s = sizeof(unsigned int) * 6;
+    size_t xlen; 
+    char x[s] = {'\0'};
+    xlen = snprintf(x, s, "%c [%02X]\n", byteval, byteval);
     debugPort.print(x);
   }
 
