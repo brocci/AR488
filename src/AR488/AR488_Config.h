@@ -7,7 +7,7 @@
 
 
 /***** Firmware version *****/
-#define FWVER "AR488 GPIB controller, ver. 0.53.42, 22/04/2026"
+#define FWVER "AR488 GPIB controller, ver. 0.53.43, 23/04/2026"
 
 
 /***** BOARD CONFIGURATION *****/
@@ -221,6 +221,10 @@
  */
 
 #ifdef DEBUG_ENABLE
+
+  // Enable millis timestamp
+  // #define DEBUG_MILLIS_TIMESTAMP
+
   // Main module
   //#define DEBUG_SERIAL_INPUT    // serialIn_h(), parseInput_h()
   //#define DEBUG_CMD_PARSER      // getCmd()

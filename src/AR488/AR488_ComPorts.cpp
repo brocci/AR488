@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "AR488_ComPorts.h"
 
-/***** AR488_ComPorts.cpp, ver. 0.53.42, 22/04/2026 *****/
+/***** AR488_ComPorts.cpp, ver. 0.53.43, 23/04/2026 *****/
 
 
 /***** DEVNULL Library *****

@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "AR488_Config.h"
 
-/***** AR488_ComPorts.cpp, ver. 0.53.42, 22/04/2026*****/
+/***** AR488_ComPorts.cpp, ver. 0.53.43, 23/04/2026*****/
 
 
 /***** DEVNULL Library *****
@@ -76,12 +76,16 @@ private:
   template<typename T1, typename T2>
   void debugPrint(const char * function, const char * filestr, int line, T1 msg1, T2 msg2){
     const char * filename = (strrchr(filestr, '/') ? strrchr(filestr, '/') + 1 : filestr);
+#ifdef DEBUG_MILLIS_TIMESTAMP
+    debugPort.print(millis()); 
+    debugPort.print(F(" : "));
+#endif
     debugPort.print(filename);
-    debugPort.print(':');
+    debugPort.print(F(" : "));
     debugPort.print(line);
     debugPort.print(" (");
     debugPort.print(function);
-    debugPort.print(") > ");
+    debugPort.print(F(") > "));
     debugPort.print(msg1);
     debugPort.println(msg2);
   }
