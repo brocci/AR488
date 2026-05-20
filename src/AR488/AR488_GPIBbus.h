@@ -8,7 +8,7 @@
 
 
 
-/***** AR488_GPIBbus.cpp, ver. 0.53.42, 22/04/2026 *****/
+/***** AR488_GPIBbus.cpp, ver. 0.53.44, 20/05/2026 *****/
 
 
 /*********************************************/
@@ -213,11 +213,11 @@ public:
 
   void setStatus(uint8_t statusByte);
   bool sendCmd(uint8_t cmdByte);
-  bool sendSecondaryCmd(uint8_t paddr, uint8_t saddr, char * data, uint8_t dsize);
+//  bool sendSecondaryCmd(uint8_t paddr, uint8_t saddr, char * data, size_t dsize);
   enum gpibHandshakeState readByte(uint8_t *db, bool readWithEoi, bool *eoi);
   enum gpibHandshakeState writeByte(uint8_t db, bool isLastByte);
   enum receiveState receiveData(Stream &dataStream, bool detectEoi, bool detectEndByte, uint8_t endByte, size_t maxSize = 0);
-  void sendData(const char *data, uint8_t dsize, bool isLastPacket = true);
+  void sendData(const char *data, size_t dsize, bool isLastPacket = true);
 //  void clearDataBus();
   void setControlVal(uint8_t value);
   void setDataVal(uint8_t value);

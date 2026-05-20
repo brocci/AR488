@@ -3,7 +3,7 @@
 #include "AR488_Config.h"
 #include "AR488_GPIBbus.h"
 
-/***** AR488_GPIB.cpp, ver. 0.53.42, 22/04/2026 *****/
+/***** AR488_GPIB.cpp, ver. 0.53.44, 22/04/2026 *****/
 
 
 /****** Process status values *****/
@@ -768,7 +768,7 @@ enum receiveState GPIBbus::receiveData(Stream &dataStream, bool detectEoi, bool 
 
 
 /***** Send a series of characters as data to the GPIB bus *****/
-void GPIBbus::sendData(const char *data, uint8_t dsize, bool isLastPacket) {
+void GPIBbus::sendData(const char *data, size_t dsize, bool isLastPacket) {
   //  bool err = false;
   uint8_t tc;
   enum gpibHandshakeState state;
@@ -797,7 +797,7 @@ void GPIBbus::sendData(const char *data, uint8_t dsize, bool isLastPacket) {
 #endif
 
   // Write the data string
-  for (int i = 0; i < dsize; i++) {
+  for (size_t i = 0; i < dsize; i++) {
 
     // If EOI asserting is on
     if (cfg.eoi) {
