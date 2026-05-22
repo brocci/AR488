@@ -120,17 +120,19 @@ int DEVNULL::lastByte()
 
   void printHex(uint8_t byteval) {
     size_t s = sizeof(unsigned int) * 4;
-    size_t xlen;
+//    size_t xlen;
     char x[s] = {'\0'};
-    xlen = snprintf(x, s, "%02X ", byteval);
+//    xlen = snprintf(x, s, "%02X ", byteval);
+    snprintf(x, s, "%02X ", byteval);
     debugPort.print(x);
   }
 
   void printHexAscii(uint8_t byteval) {
     size_t s = sizeof(unsigned int) * 6;
-    size_t xlen; 
+//    size_t xlen; 
     char x[s] = {'\0'};
-    xlen = snprintf(x, s, "%c [%02X]\n", byteval, byteval);
+//    xlen = snprintf(x, s, "%c [%02X]\n", byteval, byteval);
+    snprintf(x, s, "%c [%02X]\n", byteval, byteval);
     debugPort.print(x);
   }
 

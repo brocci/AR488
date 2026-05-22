@@ -821,11 +821,18 @@ void GPIBbus::sendData(const char *data, size_t dsize, bool isLastPacket) {
     DB_RAW_PRINT(data[i]);
 #endif
 
-    if (state != HANDSHAKE_COMPLETE) break;
+    if (state != HANDSHAKE_COMPLETE){
+#ifdef DEBUG_GPIBbus_SEND
+      DB_RAW_PRINT("\n");
+      DB_PRINT(F("ERR: aborted at character "), i);
+#endif
+      break;
+    }
   }
 
 #ifdef DEBUG_GPIBbus_SEND
-  DB_PRINT(F("<- End of send loop."), "");
+  DB_RAW_PRINT("\n");
+  DB_PRINT(F("<- End of send loop. State: "), state);
 #endif
 
   // Terminators and EOI
