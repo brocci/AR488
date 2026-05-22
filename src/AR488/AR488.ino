@@ -14,7 +14,7 @@
 #include "AR488_Eeprom.h"
 
 
-/***** FWVER "AR488 GPIB controller, ver. 0.53.44, 20/05/2026" *****/
+/***** FWVER "AR488 GPIB controller, ver. 0.53.45, 21/05/2026" *****/
 
 /*
   Arduino IEEE-488 implementation by John Chajecki
@@ -823,6 +823,7 @@ bool isIdnQuery(char *buffr) {
 
 /***** Is the parameter a number *****/
 bool isNumber(char *numstr){
+  if (numstr == nullptr) return false;
   uint8_t numlen = strlen(numstr);
   for (uint8_t i=0; i<numlen; i++){
     if (numstr[i]<48 || numstr[i]>57) return false;
@@ -1082,50 +1083,14 @@ void printHex(char *buffr, int dsize) {
 }
 */
 
-/***** Check whether a parameter is in range *****/
-/* Convert string to integer and check whether value is within
- * lowl to higl inclusive. Also returns converted text in param
- * to a uint16_t integer in rval. Returns true if successful, 
- * false if not
-*/
-/*
-bool notInRange(char *param, uint16_t lowl, uint16_t higl, uint16_t &rval) {
-
-  // Null string passed?
-  if (strlen(param) == 0) return true;
-
-  // Convert to integer
-  rval = 0;
-
-  // Param contains digits only ?
-  if (isNumber(param)) {
-    rval = atoi(param);
-  }else{
-    return false;
-  }
-
-  // Check range
-  if (rval < lowl || rval > higl) {
-    errorMsg(2);
-    if (isVerb) {
-      dataPort.print(F("Valid range is between "));
-      dataPort.print(lowl);
-      dataPort.print(F(" and "));
-      dataPort.println(higl);
-    }
-    return true;
-  }
-  return false;
-}
-*/
-
 
 bool notInRange(char *param, uint16_t lowl, uint16_t higl, uint16_t &rval) {
 
   unsigned long val = 0;
 
   // Null string passed?
-  if (strlen(param) == 0) return true;
+//  if (strlen(param) == 0) return true;
+  if (param == nullptr) return true;
 
   // Is it numeric ?
   if (!isNumber(param)) return true;
@@ -1478,7 +1443,6 @@ void read_h(char *params) {
   uint8_t pri = gpibBus.cfg.paddr;
   uint8_t sec = gpibBus.cfg.saddr;
   uint16_t val = 0xFF;
-//  char * param;
 
   // Clear read flags (Global vars)
   readWithEoi = false;
@@ -1516,71 +1480,6 @@ void read_h(char *params) {
     if (gpibBus.cfg.hflags & 0x02) showFlag(F("Read^OK"));
     gpibBus.unAddressDevice();
   }
-
-/*
-  // Read any parameters
-  if (params != NULL) {
-
-    // 1st parameter ( eoi, terminator character or address value ? )
-    param = strtok(params, " ,\t");
-    if (isNumber(param)) {
-      // Primary address in range ?
-      val = strtoul(param, NULL, 10);
-      if (val>30) {
-        errorMsg(2);
-        return;
-      }
-      pri = (uint8_t)val;
-
-      // 2nd parameter ( * or address value )
-      param = strtok(NULL, " ,\t");
-      if (isNumber(param)) {
-        val = strtoul(param, NULL, 10);
-        if (val<31) val = val + 0x60;
-        if (val<0x60 || val>0x7E) {
-          errorMsg(2);
-          return;
-        }
-        sec = (uint8_t)val;
-
-        // 3rd parameter
-        param = strtok(NULL, " ,\t");
-
-      }else{
-        sec = 0xFF;
-      }
-
-    }
-    
-    // Check for eoi or terminator character
-    if (strlen(param) > 3) {
-      errorMsg(2);
-      return;
-    } else if (strncasecmp(params, "eoi", 3) == 0) { // Read with eoi detection
-      readWithEoi = true;
-    } else { // Assume ASCII character given and convert to an 8 bit byte
-      readWithEndByte = true;
-      endByte = atoi(param);
-    }
-  }
-
-//DB_PRINT(F("readWithEoi:     "), readWithEoi);
-//DB_PRINT(F("readWithEndByte: "), readWithEndByte);
-
-  // Address device to talk
-  if (gpibBus.haveAddressedDevice() != TOTALK) gpibBus.addressDevice(pri, sec, TOTALK);
-
-  // Read data
-  if (gpibBus.cfg.amode == 3) {
-    // In auto continuous mode we set this flag to indicate we are ready for continuous read
-    autoRead = true;
-  } else {
-    // If auto mode is disabled we do a single read
-    gpibBus.receiveData(dataPort, readWithEoi, readWithEndByte, endByte);
-    if (gpibBus.cfg.hflags & 0x02) showFlag(F("Read^OK"));
-    gpibBus.unAddressDevice();
-  }
-*/
 
 }
 
@@ -2414,13 +2313,14 @@ void xdiag_h(char *params){
   // Get first parameter (mode = 0 or 1)
   param = strtok(params, " ,\t");
 
-  if (strncasecmp(param, "pins", 4) == 0) {
-    printDbPinout();
-    printCtrlPinout();
-    return;
-  }
+  if (param != nullptr) {
 
-  if (param != NULL) {
+    if (strncasecmp(param, "pins", 4) == 0) {
+      printDbPinout();
+      printCtrlPinout();
+      return;
+    }
+
     if (strlen(param)<4){
       mode = atoi(param);
       if (mode>2) {
@@ -2428,11 +2328,14 @@ void xdiag_h(char *params){
         return;
       }
     }
+
   }
 
   // Get second parameter (8 bit byte)
   param = strtok(NULL, " \t");
-  if (param != NULL) {
+
+  if (param != nullptr) {
+
     if (strlen(param)<4){
       byteval = atoi(param);
     }
@@ -2697,27 +2600,24 @@ void fndl_h(char *params) {
   gpibBus.cfg.rtmo = 35;
 
   // Read parameters
-  if (params == NULL) {
+  if (params == nullptr) {
     // No parameters given - no action to be taken
-  //  errorMsg(1);
-  //  return;
     j = amax; // Same as 'all'
-  }
-
-  // Is it a range?
-  if ( isRange(params, strlen(params), range) ) {
-    if (range[0]<30 && range[1]<31) {
-      i = (uint8_t)range[0];
-      j = (uint8_t)range[1] + 1;
-    }else{
-      errorMsg(2);
-      return;
+  }else{
+    // Is it a range?
+    if ( isRange(params, strlen(params), range) ) {
+      if (range[0]<30 && range[1]<31) {
+        i = (uint8_t)range[0];
+        j = (uint8_t)range[1] + 1;
+      }else{
+        errorMsg(2);
+        return;
+      }
     }
-  }
-
-  // Requested 'all'?
-  if ( strncasecmp(params, "all", 4) == 0) {
-    j = amax;
+    // Requested 'all'?
+    if ( strncasecmp(params, "all", 4) == 0) {
+      j = amax;
+    }
   }
 
   if (j==0) {
@@ -2847,14 +2747,13 @@ void fndl_h(char *params) {
   pri, sec = GPIB addresses between 0 and 30
   data is optional
 */
-//void secsend_h(char *params) {
 void send_h(char *params) {
   char * param;
   uint8_t pri = 0xFF;
   uint8_t sec = 0xFF;
   uint16_t val;
 
-  if (params != NULL) {
+  if (params != nullptr) {
     // 1st parameter (must be an address value)
     param = strtok(params, " ,\t");
 
@@ -2881,6 +2780,11 @@ void send_h(char *params) {
 
     // 2nd parameter (secondary address value or data)
     param = strtok(NULL, " ,\t");
+    size_t plen = strlen(param);
+    if (!plen) {
+      errorMsg(2);
+      return;
+    }
 
     if (isNumber(param)) {
       // Secondary address in range ?
@@ -2897,11 +2801,10 @@ void send_h(char *params) {
 
     }
 
-    if (param[strlen(param)-1] == '?') isQuery = true;
+    if (param[plen-1] == '?') isQuery = true;
 
-//    gpibBus.unAddressDevice();
     gpibBus.addressDevice(pri, sec, TOLISTEN);
-    gpibBus.sendData(param, strlen(param));
+    gpibBus.sendData(param, plen);
 
     if ( (gpibBus.cfg.amode == 1) || ((gpibBus.cfg.amode == 2) && isQuery) ) {
       gpibBus.addressDevice(pri, sec, TOTALK);

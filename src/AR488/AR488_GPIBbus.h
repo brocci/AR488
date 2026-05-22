@@ -146,7 +146,6 @@ enum transmitMode: uint8_t {
 
 
 
-
 /***** ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ *****/
 /***** GPIB COMMAND & STATUS DEFINITIONS *****/
 /*********************************************/
@@ -237,7 +236,7 @@ private:
   bool txBreak;  // Signal to break the GPIB transmission
   uint8_t deviceAddressed;
   bool isTerminatorDetected(uint8_t bytes[3], uint8_t eorSequence);
-  enum transmitMode _xmitMode;
+//  enum transmitMode _xmitMode;
   size_t cfgSize;
 
   // Interrupt flag for MCP23S17

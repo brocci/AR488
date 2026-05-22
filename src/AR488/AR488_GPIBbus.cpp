@@ -32,6 +32,7 @@ GPIBbus::GPIBbus() {
   cstate = 0;
   deviceAddressed = TONONE;
   cfgSize = sizeof(cfg);
+  txBreak = false;
 }
 
 
@@ -771,7 +772,7 @@ enum receiveState GPIBbus::receiveData(Stream &dataStream, bool detectEoi, bool 
 void GPIBbus::sendData(const char *data, size_t dsize, bool isLastPacket) {
   //  bool err = false;
   uint8_t tc;
-  enum gpibHandshakeState state;
+  enum gpibHandshakeState state = HANDSHAKE_START;
 
   switch (cfg.eos) {
     case 1:

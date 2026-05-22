@@ -338,6 +338,9 @@ bool btCfg(){
 
 /***** Is the reply what we expected? *****/
 bool atReply(const char* reply) {
+
+  if (reply == nullptr) return false;
+
   int sz = strlen(reply);
 
   memset(BTrbuf, '\0', BTrbufSize);
